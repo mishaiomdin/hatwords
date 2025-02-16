@@ -1,0 +1,1 @@
+Generating pages to print with words for the Hat game
