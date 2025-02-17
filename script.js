@@ -27,8 +27,14 @@ function loadParameters() {
     if (savedLevel) document.getElementById('level').value = savedLevel;
 }
 
-// Call loadParameters when the page loads
-window.onload = loadParameters;
+
+window.onload = function () {
+    loadParameters();
+    const savedLanguage = localStorage.getItem('language') || 'en';
+    document.getElementById("languageSelector").value = savedLanguage;
+    changeLanguage();
+};
+
 
 // Add event listeners to save parameters as soon as they change
 document.getElementById('cols').addEventListener('input', saveParameters);
@@ -186,4 +192,53 @@ function printPdf() {
 function getRandomLines(array, count) {
     const shuffled = [...array].sort(() => Math.random() - 0.5);  // Shuffle the array
     return shuffled.slice(0, count);  // Return the first 'count' lines
+}
+
+function changeLanguage() {
+    const lang = document.getElementById("languageSelector").value;
+    localStorage.setItem('language', lang); // Save selected language
+
+    const translations = {
+        en: {
+            title: "Hat words generator",
+            settingsTitle: "PDF Generation Settings",
+            colsLabel: "Columns: ",
+            rowsLabel: "Rows: ",
+            fontLabel: "Font: ",
+            fontSizeLabel: "Font Size: ",
+            colorLabel: "Color: ",
+            levelLabel: "Difficulty Level: ",
+            downloadBtn: "Download PDF",
+            showPdfBtn: "Show PDF in a New Tab",
+            printBtn: "Print PDF",
+            footerText: "by: Misha Iomdin"
+        },
+        ru: {
+            title: "Генератор слов для «Шляпы»",
+            settingsTitle: "Настройки для создания PDF",
+            colsLabel: "Колонки: ",
+            rowsLabel: "Строки: ",
+            fontLabel: "Шрифт: ",
+            fontSizeLabel: "Размер шрифта: ",
+            colorLabel: "Цвет: ",
+            levelLabel: "Уровень сложности: ",
+            downloadBtn: "Скачать PDF",
+            showPdfBtn: "Показать PDF в новой вкладке",
+            printBtn: "Распечатать PDF",
+            footerText: "сайт: Миша Иомдин"
+        }
+    };
+
+    document.getElementById("title").textContent = translations[lang].title;
+    document.getElementById("settingsTitle").textContent = translations[lang].settingsTitle;
+    document.getElementById("colsLabel").textContent = translations[lang].colsLabel;
+    document.getElementById("rowsLabel").textContent = translations[lang].rowsLabel;
+    document.getElementById("fontLabel").textContent = translations[lang].fontLabel;
+    document.getElementById("fontSizeLabel").textContent = translations[lang].fontSizeLabel;
+    document.getElementById("colorLabel").textContent = translations[lang].colorLabel;
+    document.getElementById("levelLabel").textContent = translations[lang].levelLabel;
+    document.getElementById("downloadBtn").textContent = translations[lang].downloadBtn;
+    document.getElementById("showPdfBtn").textContent = translations[lang].showPdfBtn;
+    document.getElementById("printBtn").textContent = translations[lang].printBtn;
+    document.getElementById("footerText").textContent = translations[lang].footerText;
 }

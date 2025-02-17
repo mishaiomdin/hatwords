@@ -1,65 +1,76 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Generator</title>
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <!--<link rel="stylesheet" href="styles.css">-->
+    <link rel="stylesheet" href="my_stylesheet.css">
 </head>
 <body>
     <header>
-        Генератор PDF
+        <h1 id="title">PDF Generator</h1>
+        <div class="language-container">
+            <label for="languageSelector" id="languageLabel"><span class="material-symbols-outlined">language</span></label>
+            <select id="languageSelector" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+            </select>
+        </div>
     </header>
 
-    <main>
-        <h2>Настройки для создания PDF</h2>
 
-        <div>
-            <label for="cols">Колонки: </label>
-            <input type="number" id="cols" value="3" min="1">
-        </div>
-        <div>
-            <label for="rows">Строки: </label>
-            <input type="number" id="rows" value="20" min="1">
-        </div>
-        <div>
-            <label for="font">Шрифт: </label>
-            <select id="font">
-                <option value="georgia">Georgia</option>
-                <option value="arial">Arial</option>
-                <option value="garamond">Garamond</option>
-            </select>
-        </div>
-        <div>
-            <label for="font-size">Размер шрифта: </label>
-            <input type="number" id="font-size" value="20" min="1">
-        </div>
-        <div>
-            <label for="color">Цвет: </label>
-            <input type="color" id="color" value="#000000">
-        </div>
-        <div>
-            <label for="level">Уровень: </label>
-            <select id="level">
-                <option value="easy">Легкий</option>
-                <option value="medium">Средний</option>
-                <option value="hard">Трудный</option>
-            </select>
+    <main>
+        <h2 id="settingsTitle">PDF Generation Settings</h2>
+
+        <div class="settings-container">
+            <div class="setting-row">
+                <label for="cols" id="colsLabel">Columns: </label>
+                <input type="number" id="cols" value="3" min="1">
+            </div>
+            <div class="setting-row">
+                <label for="rows" id="rowsLabel">Rows: </label>
+                <input type="number" id="rows" value="20" min="1">
+            </div>
+            <div class="setting-row">
+                <label for="font" id="fontLabel">Font: </label>
+                <select id="font">
+                    <option value="georgia">Georgia</option>
+                    <option value="arial">Arial</option>
+                    <option value="garamond">Garamond</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <label for="font-size" id="fontSizeLabel">Font Size: </label>
+                <input type="number" id="font-size" value="20" min="1">
+            </div>
+            <div class="setting-row">
+                <label for="color" id="colorLabel">Color: </label>
+                <input type="color" id="color" value="#000000">
+            </div>
+            <div class="setting-row">
+                <label for="level" id="levelLabel">Difficulty Level: </label>
+                <select id="level">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
         </div>
 
         <div class="button-container">
-            <button id="downloadBtn" onclick="generatePdf('download')">Скачать PDF</button>
-            <button id="showPdfBtn" onclick="generatePdf('show')">Показать PDF в новой вкладке</button>
-            <button id="printBtn" onclick="generatePdf('print')">Печать PDF</button>
+            <button id="downloadBtn" onclick="generatePdf('download')">Download PDF</button>
+            <button id="showPdfBtn" onclick="generatePdf('show')">Show PDF in a New Tab</button>
+            <button id="printBtn" onclick="generatePdf('print')">Print PDF</button>
         </div>
 
         <div id="error-box" class="error-box" style="display: none;"></div>
     </main>
 
     <footer>
-        © 2025 PDF Generator. Все права защищены.
+        <p id="footerText">by: Misha Iomdin</p>
     </footer>
 
     <script src="script.js"></script>

@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik');
+
+
+/* OVERALL */
+* {
+  font-family: Rubik;
+}
+
+/* BUTTONS */
+button {
+  background-color: #e4edff;
+  border-radius: 10px;
+  border: 0px;
+  color: black;
+}
+
+button:hover {
+  background-color: #b2c9f6;
+}
+
+.chosen_button {
+  background-color: white;
+}
+
+/* MENU */
+.menu {
+  background-color: #dfe2e5;
+  position: sticky;
+  top: 0;
+  padding: 10px;
+  z-index: 1; /* keep it over everything else */
+}
+
+.menu_row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Breaks to next line if too long */
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* TABLE */
+
+td {
+}
+
+th {
+  background-color: #e4edff;
+}
+
+/* GRAMMAR */
+
+end {
+  color: red;
+}
+
+/* RTL LANGUAGES */
+rtl {
+  direction: rtl;
+}
+
+.hebrew {
+    direction: rtl;
+    text-align: right;
+}
