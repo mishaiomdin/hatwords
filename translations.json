@@ -1,0 +1,41 @@
+{
+    "en": {
+        "title": "Hat Words Generator",
+        "titleText": "Hat words generator",
+        "pageSettingsTitle": "Page settings",
+        "colsLabel": "Columns:",
+        "rowsLabel": "Rows:",
+        "pagesLabel": "Pages:",
+        "wordsText": "words",
+        "settingsTitle": "PDF settings",
+        "fontLabel": "Font:",
+        "fontSizeLabel": "Text size:",
+        "colorLabel": "Text color:",
+        "wordlistTitle": "Wordlist settings",
+        "levelLabel": "Difficulty Level:",
+        "downloadBtnText": "Download PDF",
+        "showPdfBtnText": "Open in new tab",
+        "printBtnText": "Print",
+        "footerText": "by: Misha Iomdin"
+    },
+    "ru": {
+        "title": "Генератор слов для «Шляпы»",
+        "titleText": "Генератор слов для «Шляпы»",
+        "pageSettingsTitle": "Настройки страницы",
+        "colsLabel": "Столбцов:",
+        "rowsLabel": "Строк:",
+        "pagesLabel": "Страниц:",
+        "wordsText": "слов",
+        "settingsTitle": "Настройки PDF",
+        "fontLabel": "Шрифт:",
+        "fontSizeLabel": "Размер текста:",
+        "colorLabel": "Цвет текста:",
+        "wordlistTitle": "Настройки словаря",
+        "levelLabel": "Уровень сложности:",
+        "downloadBtnText": "Скачать PDF",
+        "showPdfBtnText": "Открыть в новой вкладке",
+        "printBtnText": "Печать",
+        "footerText": "Автор: Миша Иомдин"
+    }
+}
+

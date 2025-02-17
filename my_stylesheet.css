@@ -16,6 +16,10 @@
         'opsz' 24;
 }
 
+.material-symbols-outlined {
+    margin-right: 5px; /* Space between the icon and the text */
+}
+
 
 /* OVERALL */
 
@@ -119,6 +123,9 @@ button {
   
   cursor: pointer;
   font-size: 1em;
+
+  align-items: center;
+
 }
 
 button:hover {
@@ -129,8 +136,21 @@ button:hover {
   background-color: white;
 }
 
+
 .button-container {
-    text-align: center;
+    margin: 10px;
+    display: flex;  
+    justify-content: center;  /* Centers the buttons horizontally */
+    align-items: center;  /* Ensures buttons are vertically aligned */
+    gap: 10px;  /* Space between buttons */
+}
+
+.button-container button {
+    display: flex;  
+    align-items: center;  
+    justify-content: center;  
+    padding: 10px 20px;
+    font-size: 16px;
 }
 
 /* Settings for this website */
@@ -190,3 +210,38 @@ input, select {
   padding: 0px;
 }
 */
+
+h2 {
+  text-align: center;
+}
+
+
+.icon-text {
+    display: flex;
+    align-items: center;  /* Align icon and text vertically */
+    gap: 5px;  /* Space between icon and text */
+}
+
+.material-symbols-outlined {
+    font-size: 1em;  /* Match icon size to text */
+    line-height: 1;  /* Ensure vertical alignment */
+    display: flex;  /* Align icon properly */
+    align-items: center;  /* Center the icon */
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Reduce spacing between elements */
+}
+
+.setting-row input {
+    width: 45px;  /* Shorter input fields */
+    padding: 3px;
+    text-align: center;
+}
+
+
+
+
+

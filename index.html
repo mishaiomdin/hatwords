@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Hat Words Generator</title>
+    <title id="title">Hat Words Generator</title>
 
     <!-- libraries -->
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
@@ -18,31 +18,55 @@
 </head>
 <body>
     <header>
-        <h1 id="title">PDF Generator</h1>
-        <div class="language-container">
-            <label for="languageSelector" id="languageLabel"><span class="material-symbols-outlined">language</span></label>
+        <h1 id="titleText">Hat words generator</h1>
+        <span class="icon-text">
+            <span class="material-symbols-outlined">language</span>
             <select id="languageSelector" onchange="changeLanguage()">
                 <option value="en">English</option>
                 <option value="ru">Русский</option>
             </select>
-        </div>
+        </span>
     </header>
 
-
     <main>
-        <h2 id="settingsTitle">PDF Generation Settings</h2>
+        <h2 class="icon-text">
+            <span class="material-symbols-outlined">description</span>
+            <span id="pageSettingsTitle">Page settings</span>
+        </h2>
 
         <div class="settings-container">
             <div class="setting-row">
-                <label for="cols" id="colsLabel">Columns: </label>
-                <input type="number" id="cols" value="3" min="1">
+                <label for="cols" id="colsLabel">Cols:</label>
+                <input type="number" id="cols" value="3" min="1" oninput="updateWordCount()">
+
+                <span>×</span>
+
+                <label for="rows" id="rowsLabel">Rows:</label>
+                <input type="number" id="rows" value="20" min="1" oninput="updateWordCount()">
+
+                <span>×</span>
+
+                <label for="pages" id="pagesLabel">Pages:</label>
+                <input type="number" id="pages" value="1" min="1" oninput="updateWordCount()">
+
+                <span>=</span>
+                <span id="wordCountDisplay">60</span> <span id="wordsText">words</span>
             </div>
+        </div>
+
+        <h2 class="icon-text">
+            <span class="material-symbols-outlined">settings</span>
+            <span id="settingsTitle">PDF settings</span>
+        </h2>
+
+        <div class="settings-container">
             <div class="setting-row">
-                <label for="rows" id="rowsLabel">Rows: </label>
-                <input type="number" id="rows" value="20" min="1">
-            </div>
-            <div class="setting-row">
-                <label for="font" id="fontLabel">Font: </label>
+                <label for="font">
+                    <span class="icon-text">
+                        <span class="material-symbols-outlined">title</span>
+                        <span id="fontLabel">Font:</span>
+                    </span>
+                </label>
                 <select id="font" style="font-family: Georgia;">
                     <option value="Arial">Arial</option>
                     <option value="Garamond">Garamond</option>
@@ -52,13 +76,31 @@
                 </select>
             </div>
             <div class="setting-row">
-                <label for="font-size" id="fontSizeLabel">Font Size: </label>
+                <label for="font-size">
+                    <span class="icon-text">
+                        <span class="material-symbols-outlined">text_fields</span>
+                        <span id="fontSizeLabel">Text size:</span>
+                    </span>
+                </label>
                 <input type="number" id="font-size" value="20" min="1">
             </div>
             <div class="setting-row">
-                <label for="color" id="colorLabel">Color: </label>
+                <label for="color">
+                    <span class="icon-text">
+                        <span class="material-symbols-outlined">format_color_text</span>
+                        <span id="colorLabel">Text color:</span>
+                    </span>
+                </label>
                 <input type="color" id="color" value="#000000" style="padding-top: 0px; padding-bottom: 0px;">
             </div>
+        </div>
+
+        <h2 class="icon-text">
+            <span class="material-symbols-outlined">dictionary</span>
+            <span id="wordlistTitle">Wordlist settings</span>
+        </h2>
+
+        <div class="settings-container">
             <div class="setting-row">
                 <label for="level" id="levelLabel">Difficulty Level: </label>
                 <select id="level">
@@ -70,9 +112,20 @@
         </div>
 
         <div class="button-container">
-            <button id="downloadBtn" onclick="generatePdf('download')">Download PDF</button>
-            <button id="showPdfBtn" onclick="generatePdf('show')">Show PDF in a New Tab</button>
-            <button id="printBtn" onclick="generatePdf('print')">Print PDF</button>
+            <button id="downloadBtn" onclick="generatePdf('download')">
+                <span class="material-symbols-outlined">download</span>
+                <span id="downloadBtnText">Download PDF</span>
+            </button>
+
+            <button id="showPdfBtn" onclick="generatePdf('show')">
+                <span class="material-symbols-outlined">open_in_new</span>
+                <span id="showPdfBtnText">Open in new tab</span>
+            </button>
+
+            <button id="printBtn" onclick="generatePdf('print')">
+                <span class="material-symbols-outlined">print</span>
+                <span id="printBtnText">Print</span>
+            </button>
         </div>
 
         <div id="error-box" class="error-box" style="display: none;"></div>

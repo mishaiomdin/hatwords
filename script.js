@@ -42,42 +42,31 @@ function addFontFaces() {
     document.head.appendChild(style);
 }
 
+const saved_parameters = ['cols', 'rows', 'pages', 'font', 'font-size', 'color', 'level'];
 
 // Save parameters to localStorage
 function saveParameters() {
-    localStorage.setItem('cols', document.getElementById('cols').value);
-    localStorage.setItem('rows', document.getElementById('rows').value);
-    localStorage.setItem('font', document.getElementById('font').value);
-    localStorage.setItem('font-size', document.getElementById('font-size').value);
-    localStorage.setItem('color', document.getElementById('color').value);
-    localStorage.setItem('level', document.getElementById('level').value);
-    document.getElementById('font').addEventListener('change', function () {
-    saveParameters();
-    this.style.fontFamily = this.value;
-});
+    saved_parameters.forEach(param => {
+        localStorage.setItem(param, document.getElementById(param).value);
+    });
 }
 
 // Load parameters from localStorage
 function loadParameters() {
-    const savedCols = localStorage.getItem('cols');
-    const savedRows = localStorage.getItem('rows');
+    saved_parameters.forEach(param => {
+        const savedValue = localStorage.getItem(param);
+        if (savedValue) document.getElementById(param).value = savedValue;
+    });
+
+    // Apply font styling after loading
     const savedFont = localStorage.getItem('font');
-    const savedFontSize = localStorage.getItem('font-size');
-    const savedColor = localStorage.getItem('color');
-    const savedLevel = localStorage.getItem('level');
-
-    if (savedCols) document.getElementById('cols').value = savedCols;
-    if (savedRows) document.getElementById('rows').value = savedRows;
-    if (savedFont) document.getElementById('font').value = savedFont;
-    if (savedFontSize) document.getElementById('font-size').value = savedFontSize;
-    if (savedColor) document.getElementById('color').value = savedColor;
-    if (savedLevel) document.getElementById('level').value = savedLevel;
-
-    if (savedFont) {
-    document.getElementById('font').value = savedFont;
-    document.getElementById('font').style.fontFamily = savedFont;
+    if (savedFont) document.getElementById('font').style.fontFamily = savedFont;
 }
-}
+
+// Add event listeners dynamically
+saved_parameters.forEach(param => {
+    document.getElementById(param).addEventListener('input', saveParameters);
+});
 
 
 window.onload = function () {
@@ -86,6 +75,7 @@ window.onload = function () {
     addFontFaces();
     const savedLanguage = localStorage.getItem('language') || 'en';
     document.getElementById("languageSelector").value = savedLanguage;
+    updateWordCount();
     changeLanguage();
 };
 
@@ -130,19 +120,18 @@ async function generatePdf(action) {
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(window.fontkit); // Register fontkit
 
-    const page = pdfDoc.addPage([595, 842]); // A4 size
-    const { width, height } = page.getSize();
-
-    // Get the number of columns and rows from input
+    // Get user input
     const cols = parseInt(document.getElementById("cols").value, 10);
     const rows = parseInt(document.getElementById("rows").value, 10);
-
-    const rectWidth = width / cols, rectHeight = height / rows;
-
-    // Get font, font size, and color from input
+    const numPages = parseInt(document.getElementById("pages").value, 10);
     const selectedFont = document.getElementById("font").value;
     const fontSize = parseInt(document.getElementById("font-size").value, 10);
     const color = document.getElementById("color").value;
+    const level = document.getElementById("level").value;
+
+    // Page dimensions
+    const pageWidth = 595, pageHeight = 842; // A4 size
+    const rectWidth = pageWidth / cols, rectHeight = pageHeight / rows;
 
     // Set font URL based on selection
     let fontUrl = `fonts/${selectedFont}.ttf`;
@@ -153,39 +142,61 @@ async function generatePdf(action) {
         const font = await pdfDoc.embedFont(fontBytes);
 
         // Fetch words based on selected difficulty level
-        const level = document.getElementById("level").value;
-        let wordListUrl = "";
-        if (level === "easy") {
-            wordListUrl = "wordlists/easy.txt";
-        } else if (level === "medium") {
-            wordListUrl = "wordlists/medium.txt";
-        } else if (level === "hard") {
-            wordListUrl = "wordlists/hard.txt";
-        }
-
+        let wordListUrl = `wordlists/${level}.txt`;
         const response = await fetch(wordListUrl);
         const text = await response.text();
-        const lines = text.split('\n');  // Split the text into lines
-        const randomLines = getRandomLines(lines, cols * rows);  // Select cols * rows random lines
-        const words = randomLines;
+        const allWords = text.split('\n').map(word => word.trim()).filter(word => word !== ""); // Clean up words
+
+        // Total number of words needed
+        const totalWords = cols * rows * numPages;
+
+        // Get unique words without repetition
+        const words = getUniqueRandomWords(allWords, totalWords);
+        if (!words) {
+            showError(`Not enough words available in the word list! Required: ${totalWords}, Available: ${allWords.length}`);
+            return;
+        }
 
         let wordIndex = 0;
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                if (wordIndex >= words.length) break;
-                let x = col * rectWidth, y = height - (row + 1) * rectHeight;
 
-                page.drawRectangle({ x, y, width: rectWidth, height: rectHeight, borderColor: rgb(0, 0, 0), borderWidth: 1 });
+        // Loop through the required number of pages
+        for (let pageNum = 0; pageNum < numPages; pageNum++) {
+            const page = pdfDoc.addPage([pageWidth, pageHeight]);
+            const { width, height } = page.getSize();
 
-                // Center the text horizontally and vertically
-                const textWidth = font.widthOfTextAtSize(words[wordIndex], fontSize);
-                const textHeight = font.heightAtSize(fontSize);
-                const textX = x + (rectWidth - textWidth) / 2;  // Horizontal centering
-                const textY = y + (rectHeight - textHeight) / 2 + textHeight / 4;  // Vertical centering
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (wordIndex >= words.length) break;
+                    let x = col * rectWidth, y = height - (row + 1) * rectHeight;
 
-                page.drawText(words[wordIndex], { x: textX, y: textY, size: fontSize, font, color: rgb(parseInt(color.slice(1, 3), 16) / 255, parseInt(color.slice(3, 5), 16) / 255, parseInt(color.slice(5, 7), 16) / 255) });
+                    page.drawRectangle({ 
+                        x, y, 
+                        width: rectWidth, 
+                        height: rectHeight, 
+                        borderColor: rgb(0, 0, 0), 
+                        borderWidth: 1 
+                    });
 
-                wordIndex++;
+                    // Center the text inside the rectangle
+                    const textWidth = font.widthOfTextAtSize(words[wordIndex], fontSize);
+                    const textHeight = font.heightAtSize(fontSize);
+                    const textX = x + (rectWidth - textWidth) / 2;  // Horizontal centering
+                    const textY = y + (rectHeight - textHeight) / 2 + textHeight / 4;  // Vertical centering
+
+                    page.drawText(words[wordIndex], { 
+                        x: textX, 
+                        y: textY, 
+                        size: fontSize, 
+                        font, 
+                        color: rgb(
+                            parseInt(color.slice(1, 3), 16) / 255, 
+                            parseInt(color.slice(3, 5), 16) / 255, 
+                            parseInt(color.slice(5, 7), 16) / 255
+                        ) 
+                    });
+
+                    wordIndex++;
+                }
             }
         }
 
@@ -206,9 +217,27 @@ async function generatePdf(action) {
         showError('');
 
     } catch (error) {
-        showError('Ошибка при создании PDF: ' + error.message);
+        showError('Error while generating PDF: ' + error.message);
     }
 }
+
+/**
+ * Get a specified number of unique random words from the available list.
+ * Ensures words are not repeated across pages.
+ * 
+ * @param {Array} allWords - List of all possible words.
+ * @param {number} count - Number of words required.
+ * @returns {Array|null} - Array of unique words or null if not enough words are available.
+ */
+function getUniqueRandomWords(allWords, count) {
+    if (allWords.length < count) return null; // Not enough words
+
+    // Shuffle words and take only the required amount
+    const shuffled = allWords.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+}
+
+
 
 // Function to download the PDF
 function downloadPdf() {
@@ -245,51 +274,39 @@ function getRandomLines(array, count) {
     return shuffled.slice(0, count);  // Return the first 'count' lines
 }
 
-function changeLanguage() {
+async function changeLanguage() {
     const lang = document.getElementById("languageSelector").value;
     localStorage.setItem('language', lang); // Save selected language
 
-    const translations = {
-        en: {
-            title: "Hat words generator",
-            settingsTitle: "PDF Generation Settings",
-            colsLabel: "Columns: ",
-            rowsLabel: "Rows: ",
-            fontLabel: "Font: ",
-            fontSizeLabel: "Font Size: ",
-            colorLabel: "Color: ",
-            levelLabel: "Difficulty Level: ",
-            downloadBtn: "Download PDF",
-            showPdfBtn: "Show PDF in a New Tab",
-            printBtn: "Print PDF",
-            footerText: "by: Misha Iomdin"
-        },
-        ru: {
-            title: "Генератор слов для «Шляпы»",
-            settingsTitle: "Настройки для создания PDF",
-            colsLabel: "Колонки: ",
-            rowsLabel: "Строки: ",
-            fontLabel: "Шрифт: ",
-            fontSizeLabel: "Размер шрифта: ",
-            colorLabel: "Цвет: ",
-            levelLabel: "Уровень сложности: ",
-            downloadBtn: "Скачать PDF",
-            showPdfBtn: "Показать PDF в новой вкладке",
-            printBtn: "Распечатать PDF",
-            footerText: "сайт: Миша Иомдин"
-        }
-    };
+    try {
+        const response = await fetch('translations.json');
+        const translations = await response.json();
 
-    document.getElementById("title").textContent = translations[lang].title;
-    document.getElementById("settingsTitle").textContent = translations[lang].settingsTitle;
-    document.getElementById("colsLabel").textContent = translations[lang].colsLabel;
-    document.getElementById("rowsLabel").textContent = translations[lang].rowsLabel;
-    document.getElementById("fontLabel").textContent = translations[lang].fontLabel;
-    document.getElementById("fontSizeLabel").textContent = translations[lang].fontSizeLabel;
-    document.getElementById("colorLabel").textContent = translations[lang].colorLabel;
-    document.getElementById("levelLabel").textContent = translations[lang].levelLabel;
-    document.getElementById("downloadBtn").textContent = translations[lang].downloadBtn;
-    document.getElementById("showPdfBtn").textContent = translations[lang].showPdfBtn;
-    document.getElementById("printBtn").textContent = translations[lang].printBtn;
-    document.getElementById("footerText").textContent = translations[lang].footerText;
+        if (!translations[lang]) {
+            console.error("Language not found:", lang);
+            return;
+        }
+
+        // Apply translations dynamically
+        Object.entries(translations[lang]).forEach(([key, value]) => {
+            const element = document.getElementById(key);
+            if (element) element.textContent = value;
+        });
+    } catch (error) {
+        console.error("Error loading translations:", error);
+    }
 }
+
+function updateWordCount() {
+    const cols = parseInt(document.getElementById("cols").value, 10) || 1;
+    const rows = parseInt(document.getElementById("rows").value, 10) || 1;
+    const pages = parseInt(document.getElementById("pages").value, 10) || 1;
+
+    const totalWords = cols * rows * pages;
+    document.getElementById("wordCountDisplay").textContent = totalWords;
+}
+
+// Run on page load to ensure the correct value is displayed
+document.addEventListener("DOMContentLoaded", updateWordCount);
+
+
