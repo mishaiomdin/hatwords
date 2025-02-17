@@ -167,3 +167,20 @@ button:hover {
 }
 
 
+/* ERROR BOX */
+.error-box {
+    color: #FF474D;
+    border: 1px solid #FF474D;
+    border-radius: 10px;
+    text-align: center;
+
+    padding: 10px;
+    margin-top: 20px;
+    
+    display: none;
+    
+}
+
+input {
+  length: 10px;
+}
