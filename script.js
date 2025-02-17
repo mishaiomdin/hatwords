@@ -121,13 +121,14 @@ async function generatePdf(action) {
     pdfDoc.registerFontkit(window.fontkit); // Register fontkit
 
     // Get user input
+    const dictionary = document.getElementById("dictionary").value; // Roman or Moscow
+    const level = document.getElementById("level").value; // easy, medium, hard
     const cols = parseInt(document.getElementById("cols").value, 10);
     const rows = parseInt(document.getElementById("rows").value, 10);
     const numPages = parseInt(document.getElementById("pages").value, 10);
     const selectedFont = document.getElementById("font").value;
     const fontSize = parseInt(document.getElementById("font-size").value, 10);
     const color = document.getElementById("color").value;
-    const level = document.getElementById("level").value;
 
     // Page dimensions
     const pageWidth = 595, pageHeight = 842; // A4 size
@@ -141,11 +142,15 @@ async function generatePdf(action) {
         const fontBytes = await fetch(fontUrl).then(res => res.arrayBuffer());
         const font = await pdfDoc.embedFont(fontBytes);
 
-        // Fetch words based on selected difficulty level
-        let wordListUrl = `wordlists/${level}.txt`;
+        // Fetch words from the selected dictionary and difficulty level
+        let wordListUrl = `wordlists/${dictionary}/${level}.json`; // e.g., wordlists/Roman/easy.json
         const response = await fetch(wordListUrl);
-        const text = await response.text();
-        const allWords = text.split('\n').map(word => word.trim()).filter(word => word !== ""); // Clean up words
+        const allWords = await response.json(); // JSON is just an array
+
+        if (!Array.isArray(allWords) || allWords.length === 0) {
+            showError(`Word list is empty or invalid for dictionary: ${dictionary}, level: ${level}`);
+            return;
+        }
 
         // Total number of words needed
         const totalWords = cols * rows * numPages;
@@ -153,7 +158,7 @@ async function generatePdf(action) {
         // Get unique words without repetition
         const words = getUniqueRandomWords(allWords, totalWords);
         if (!words) {
-            showError(`Not enough words available in the word list! Required: ${totalWords}, Available: ${allWords.length}`);
+            showError(`Not enough words available! Required: ${totalWords}, Available: ${allWords.length}`);
             return;
         }
 
@@ -220,6 +225,8 @@ async function generatePdf(action) {
         showError('Error while generating PDF: ' + error.message);
     }
 }
+
+
 
 /**
  * Get a specified number of unique random words from the available list.

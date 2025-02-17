@@ -107,6 +107,18 @@
 
         <div class="settings-container">
             <div class="setting-row">
+                <label for="dictionary" id="dictionaryLabel">Dictionary: </label>
+                <select id="dictionary">
+                    <option value="Roman">Roman</option>
+                    <option value="Moscow">Moscow</option>
+                    <option value="EnglishHat">EnglishHat</option>
+                    <option value="EnglishOrange">EnglishOrange</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-container">
+            <div class="setting-row">
                 <label for="level" id="levelLabel">Difficulty Level: </label>
                 <select id="level">
                     <option value="easy">Easy</option>
@@ -115,6 +127,7 @@
                 </select>
             </div>
         </div>
+
 
         <div class="button-container">
             <button id="downloadBtn" onclick="generatePdf('download')">
