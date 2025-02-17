@@ -35,7 +35,7 @@ function addFontFaces() {
         style.innerHTML += `
             @font-face {
                 font-family: "${font}";
-                src: url("/fonts/${font.toLowerCase()}.ttf") format("truetype");
+                src: url("fonts/${font}.ttf") format("truetype");
             }
         `;
     });

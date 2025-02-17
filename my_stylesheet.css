@@ -181,6 +181,12 @@ button:hover {
     
 }
 
-input {
-  length: 10px;
+/*
+input, select {
+  border-radius: 10px;
+  border: 1px solid #000000;
+  min-height: 2em;
+  width: 10em;
+  padding: 0px;
 }
+*/
