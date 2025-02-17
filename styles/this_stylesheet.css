@@ -1,0 +1,63 @@
+/* Settings for this website */
+
+/* FORM CONTAINER */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form items */
+    max-width: 400px; /* Adjust width */
+    margin: 0 auto; /* Center align */
+}
+
+/* FORM ROW */
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* LABELS */
+.setting-row label {
+    flex: 1; /* Take available space */
+    text-align: left;
+    /*font-size: 16px;*/
+}
+
+/* INPUTS */
+.setting-row input,
+.setting-row select {
+    flex: 1;
+    padding: 5px;
+    /*font-size: 16px;*/
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Reduce spacing between elements */
+}
+
+.setting-row input {
+    width: 45px;  /* Shorter input fields */
+    padding: 3px;
+    text-align: center;
+}
+
+/* ERROR BOX */
+.error-box {
+    color: #FF474D;
+    border: 1px solid #FF474D;
+    border-radius: 10px;
+    text-align: center;
+
+    padding: 10px;
+    margin-top: 20px;
+    
+    display: none;
+}
+
+
+
+
+
+
