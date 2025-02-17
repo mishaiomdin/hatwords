@@ -80,6 +80,11 @@ footer {
     margin-top: 30px;
     font-size: 14px;
     color: #888;
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }
 
 
