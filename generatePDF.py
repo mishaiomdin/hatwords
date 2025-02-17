@@ -43,10 +43,10 @@ def create_pdf(words, filename="output.pdf", cols=3, rows=5, font="Georgia", fon
 # Example usage
 
 COLS = 3
-ROWS = 15
+ROWS = 20
 FONT = "Georgia"
 FONT_SIZE = 20
-WORDLIST_FILE = "wordlists/hard.txt"
+WORDLIST_FILE = "wordlists/easy.txt"
 
 with open(WORDLIST_FILE) as file:
     wordlist = [x.strip() for x in file.readlines()]
