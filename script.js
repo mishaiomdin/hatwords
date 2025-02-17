@@ -1,4 +1,47 @@
 let pdfBlobUrl = null;
+let fonts = ['Arial', 'Georgia', 'Garamond', 'Roboto', 'Rubik'];
+
+
+function populateFontDropdown() {
+    const fontSelect = document.getElementById("font");
+    fontSelect.innerHTML = ""; // Clear existing options
+
+    fonts.forEach(font => {
+        const option = document.createElement("option");
+        option.value = font;
+        option.textContent = font;
+        option.style.fontFamily = font;
+        fontSelect.appendChild(option);
+    });
+
+    // Apply the saved font if it exists
+    const savedFont = localStorage.getItem("font");
+    if (savedFont) {
+        fontSelect.value = savedFont;
+        fontSelect.style.fontFamily = savedFont;
+    }
+}
+
+// Ensure the dropdown updates when a font is selected
+document.getElementById('font').addEventListener('change', function () {
+    saveParameters();
+    this.style.fontFamily = this.value;
+});
+
+
+function addFontFaces() {
+    const style = document.createElement("style");
+    fonts.forEach(font => {
+        style.innerHTML += `
+            @font-face {
+                font-family: "${font}";
+                src: url("/fonts/${font.toLowerCase()}.ttf") format("truetype");
+            }
+        `;
+    });
+    document.head.appendChild(style);
+}
+
 
 // Save parameters to localStorage
 function saveParameters() {
@@ -8,6 +51,10 @@ function saveParameters() {
     localStorage.setItem('font-size', document.getElementById('font-size').value);
     localStorage.setItem('color', document.getElementById('color').value);
     localStorage.setItem('level', document.getElementById('level').value);
+    document.getElementById('font').addEventListener('change', function () {
+    saveParameters();
+    this.style.fontFamily = this.value;
+});
 }
 
 // Load parameters from localStorage
@@ -25,11 +72,18 @@ function loadParameters() {
     if (savedFontSize) document.getElementById('font-size').value = savedFontSize;
     if (savedColor) document.getElementById('color').value = savedColor;
     if (savedLevel) document.getElementById('level').value = savedLevel;
+
+    if (savedFont) {
+    document.getElementById('font').value = savedFont;
+    document.getElementById('font').style.fontFamily = savedFont;
+}
 }
 
 
 window.onload = function () {
+    populateFontDropdown();
     loadParameters();
+    addFontFaces();
     const savedLanguage = localStorage.getItem('language') || 'en';
     document.getElementById("languageSelector").value = savedLanguage;
     changeLanguage();
@@ -91,10 +145,7 @@ async function generatePdf(action) {
     const color = document.getElementById("color").value;
 
     // Set font URL based on selection
-    let fontUrl = "";
-    if (selectedFont === "georgia") fontUrl = "fonts/georgia.ttf";
-    else if (selectedFont === "arial") fontUrl = "fonts/arial.ttf";
-    else if (selectedFont === "garamond") fontUrl = "fonts/garamond.ttf";
+    let fontUrl = `fonts/${selectedFont}.ttf`;
 
     try {
         // Fetch the selected font and process it
