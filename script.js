@@ -145,7 +145,7 @@ async function generatePdf(action) {
         // Fetch words from the selected dictionary and difficulty level
         let wordListUrl = `wordlists/${dictionary}/${level}.json`; // e.g., wordlists/Roman/easy.json
         const response = await fetch(wordListUrl);
-        const allWords = await response.json(); // JSON is just an array
+        let allWords = await response.json(); // JSON is just an array
 
         if (!Array.isArray(allWords) || allWords.length === 0) {
             showError(`Word list is empty or invalid for dictionary: ${dictionary}, level: ${level}`);
@@ -156,7 +156,7 @@ async function generatePdf(action) {
         const totalWords = cols * rows * numPages;
 
         // Get unique words without repetition
-        const words = getUniqueRandomWords(allWords, totalWords);
+        let words = getUniqueRandomWords(allWords, totalWords);
         if (!words) {
             showError(`Not enough words available! Required: ${totalWords}, Available: ${allWords.length}`);
             return;
@@ -182,13 +182,17 @@ async function generatePdf(action) {
                         borderWidth: 1 
                     });
 
+                    // Get a fitting word
+                    let word = getFittingWord(words[wordIndex], allWords, font, fontSize, rectWidth);
+                    if (!word) continue; // If no suitable word is found, skip
+
                     // Center the text inside the rectangle
-                    const textWidth = font.widthOfTextAtSize(words[wordIndex], fontSize);
+                    const textWidth = font.widthOfTextAtSize(word, fontSize);
                     const textHeight = font.heightAtSize(fontSize);
                     const textX = x + (rectWidth - textWidth) / 2;  // Horizontal centering
                     const textY = y + (rectHeight - textHeight) / 2 + textHeight / 4;  // Vertical centering
 
-                    page.drawText(words[wordIndex], { 
+                    page.drawText(word, { 
                         x: textX, 
                         y: textY, 
                         size: fontSize, 
@@ -224,6 +228,29 @@ async function generatePdf(action) {
     } catch (error) {
         showError('Error while generating PDF: ' + error.message);
     }
+}
+
+/**
+ * Finds a word that fits within the given box width.
+ * If the word is too long, it selects a shorter one from the list.
+ */
+function getFittingWord(word, wordList, font, fontSize, maxWidth) {
+    let textWidth = font.widthOfTextAtSize(word, fontSize);
+
+    // If the word fits, return it
+    if (textWidth <= maxWidth) {
+        return word;
+    }
+
+    // Try to find a shorter replacement word
+    for (let candidate of wordList) {
+        if (font.widthOfTextAtSize(candidate, fontSize) <= maxWidth) {
+            return candidate;
+        }
+    }
+
+    // If no suitable replacement is found, return null (word will be skipped)
+    return null;
 }
 
 
