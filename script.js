@@ -4,7 +4,7 @@ let fonts = ['Arial', 'Georgia', 'Garamond', 'Roboto', 'Rubik'];
 
 function populateFontDropdown() {
     const fontSelect = document.getElementById("font");
-    fontSelect.innerHTML = "Georgia";
+    fontSelect.innerHTML = "";
 
     fonts.forEach(font => {
         const option = document.createElement("option");
@@ -15,7 +15,7 @@ function populateFontDropdown() {
     });
 
     // Apply the saved font if it exists
-    const savedFont = localStorage.getItem("font");
+    const savedFont = localStorage.getItem("font") || 'Georgia';
     if (savedFont) {
         fontSelect.value = savedFont;
         fontSelect.style.fontFamily = savedFont;
