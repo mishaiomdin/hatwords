@@ -1,5 +1,12 @@
 /* Settings for this website */
 
+@media only screen and (max-width: 768px) {
+        #showPdfBtn {
+            display: none;
+        }
+    }
+
+    
 /* FORM CONTAINER */
 .settings-container {
     display: flex;
