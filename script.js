@@ -4,7 +4,7 @@ let fonts = ['Arial', 'Georgia', 'Garamond', 'Roboto', 'Rubik'];
 
 function populateFontDropdown() {
     const fontSelect = document.getElementById("font");
-    fontSelect.innerHTML = ""; // Clear existing options
+    fontSelect.innerHTML = "Georgia";
 
     fonts.forEach(font => {
         const option = document.createElement("option");

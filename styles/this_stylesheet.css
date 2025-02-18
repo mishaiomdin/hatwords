@@ -14,6 +14,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 5px;
+    /*flex-wrap: wrap;*/
 }
 
 /* LABELS */
@@ -31,14 +33,9 @@
     /*font-size: 16px;*/
 }
 
-.setting-row {
-    display: flex;
-    align-items: center;
-    gap: 5px; /* Reduce spacing between elements */
-}
-
 .setting-row input {
     width: 45px;  /* Shorter input fields */
+    /*max-width: 45px;*/
     padding: 3px;
     text-align: center;
 }
