@@ -183,8 +183,10 @@ async function generatePdf(action) {
                     });
 
                     // Get a fitting word
-                    let word = getFittingWord(words[wordIndex], allWords, font, fontSize, rectWidth);
-                    if (!word) continue; // If no suitable word is found, skip
+                    //// Doesn't work properly yet, leads to repeated words:
+                    //// let word = getFittingWord(words[wordIndex], allWords, font, fontSize, rectWidth);
+                    //// if (!word) continue; // If no suitable word is found, skip
+                    let word = words[wordIndex]
 
                     // Center the text inside the rectangle
                     const textWidth = font.widthOfTextAtSize(word, fontSize);
